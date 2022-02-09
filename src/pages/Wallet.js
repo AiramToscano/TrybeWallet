@@ -3,12 +3,26 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 class Wallet extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      totalPrice: 0,
+    };
+  }
+
   render() {
     const { email } = this.props;
+    const { totalPrice } = this.state;
     return (
       <div>
+        <header>
+          <span data-testid="email-field">{email}</span>
+          <div>
+            <span data-testid="total-field">{totalPrice}</span>
+            <span data-testid="header-currency-field">BRL</span>
+          </div>
+        </header>
         <h1>teste</h1>
-        <span>{email}</span>
       </div>
     );
   }
