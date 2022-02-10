@@ -14,6 +14,7 @@ class Wallet extends React.Component {
       tag: '',
       value: '',
       id: 0,
+      moeda: 'Real',
     };
     this.handleChange = this.handleChange.bind(this);
     this.onSubmitDespesas = this.onSubmitDespesas.bind(this);
@@ -69,10 +70,10 @@ class Wallet extends React.Component {
   }
 
   render() {
-    const { email, coins } = this.props;
+    const { email, coins, getStateExpenses } = this.props;
     const { totalPrice, currency,
-      description, method, tag, value } = this.state;
-    // console.log(coins);
+      description, method, tag, value, moeda } = this.state;
+    // console.log(getStateExpenses);
     return (
       <div>
         <header>
@@ -165,6 +166,22 @@ class Wallet extends React.Component {
               <th>Moeda de conversão</th>
               <th>Editar/Excluir</th>
             </tr>
+            {getStateExpenses.length > 0 ? getStateExpenses.map((e, index) => (
+              <tr key={ index }>
+                <td>{e.description}</td>
+                <td>{e.tag}</td>
+                <td>{e.method}</td>
+                <td>{e.value}</td>
+                <td>{e.exchangeRates[e.currency].name}</td>
+                <td>{parseFloat(e.exchangeRates[e.currency].ask).toFixed(2)}</td>
+                <td>
+                  {
+                    parseFloat(e.exchangeRates[e.currency].ask * e.value).toFixed(2)
+                  }
+                </td>
+                <td>{ moeda }</td>
+              </tr>
+            )) : null}
           </thead>
         </table>
       </div>
