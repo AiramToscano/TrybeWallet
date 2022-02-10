@@ -151,6 +151,17 @@ class Wallet extends React.Component {
           <button type="button" onClick={ this.onSubmitDespesas }>
             Adicionar Despesas
           </button>
+          {/* <div>
+          <span>Descrição</span>
+          <span>Tag</span>
+          <span>Método de pagamento</span>
+          <span>Valor</span>
+          <span>Moeda</span>
+          <span>Câmbio utilizado</span>
+          <span>Valor convertido</span>
+          <span>Moeda de conversão</span>
+          <span>Editar/Excluir</span>
+        </div> */}
         </header>
       </div>
     );
