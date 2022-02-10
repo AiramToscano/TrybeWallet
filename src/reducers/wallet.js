@@ -1,20 +1,28 @@
 // Esse reducer será responsável por tratar o todas as informações relacionadas as despesas
-// import { ADD_EMAIL_TYPE } from '../actions';
+import { GET_LOCATION_SUCCESS, GET_LOCATION_FAIL, ADD_DESPESAS_TYPE } from '../actions';
 
 const INITIAL_STATE = {
-  wallet: {
-    currencies: [],
-    expenses: [],
-  },
+  currencies: [],
+  expenses: [],
 };
 
 const walletReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  //   case ADD_EMAIL_TYPE:
-  //     // console.log('chegou');
-  //     return { ...state,
-  //       email: action.payload,
-  //     };
+  case GET_LOCATION_SUCCESS:
+    // console.log('chegou');
+    return { ...state,
+      currencies: action.payload,
+    };
+  case GET_LOCATION_FAIL:
+    return {
+      ...state,
+      error: 'DEU RUIM NA API',
+    };
+  case ADD_DESPESAS_TYPE:
+    return {
+      ...state,
+      expenses: [...state.expenses, action.obj],
+    };
   default:
     return state;
   }
