@@ -7,7 +7,6 @@ class Wallet extends React.Component {
   constructor() {
     super();
     this.state = {
-      totalPrice: 0,
       currency: '',
       description: '',
       method: '',
@@ -25,16 +24,6 @@ class Wallet extends React.Component {
   componentDidMount() {
     const { getApiCoin } = this.props;
     getApiCoin();
-  }
-
-  onDeleter(id1) {
-    // const { totalPrice } = this.state;
-    const { deleter, getStateExpenses } = this.props;
-    // const {value} = this.state
-    // const newTotal = totalPrice - valorConvertido;
-    const net = getStateExpenses.filter(({ id }) => id !== id1);
-    deleter(net);
-    this.setState({}, () => this.sumPrices());
   }
 
   onSubmitDespesas() {
@@ -59,15 +48,14 @@ class Wallet extends React.Component {
     this.setState({ value: '' }, () => this.sumPrices());
   }
 
-  sumPrices() {
-    const { getStateExpenses } = this.props;
-    // console.log(getStateExpenses);
-    // console.log(e);
-    const findNumber = getStateExpenses
-      .map(({ currency, exchangeRates, value }) => value * exchangeRates[currency].ask);
-    const total = findNumber
-      .reduce((totalVet, currentElement) => totalVet + currentElement, 0);
-    this.setState({ totalPrice: total });
+  onDeleter(id1) {
+    // const { totalPrice } = this.state;
+    const { deleter, getStateExpenses } = this.props;
+    // const {value} = this.state
+    // const newTotal = totalPrice - valorConvertido;
+    const net = getStateExpenses.filter(({ id }) => id !== id1);
+    deleter(net);
+    this.setState({}, () => this.sumPrices());
   }
 
   handleChange({ target }) {
@@ -76,17 +64,30 @@ class Wallet extends React.Component {
     this.setState({ [name]: value });
   }
 
+  sumPrices() {
+    const { getStateExpenses } = this.props;
+    // console.log(getStateExpenses);
+    // console.log(e);
+    const findNumber = getStateExpenses
+      .map(({ currency, exchangeRates, value }) => value * exchangeRates[currency].ask);
+    const total = findNumber
+      .reduce((totalVet, currentElement) => totalVet + currentElement, 0);
+    return total;
+  }
+
   render() {
     const { email, coins, getStateExpenses } = this.props;
-    const { totalPrice, currency,
-      description, method, tag, value, moeda } = this.state;
-    const new1 = parseFloat(totalPrice).toFixed(2);
+    const { currency, description, method, tag, value, moeda } = this.state;
+    // const new1 = parseFloat(totalPrice).toFixed(2);
+    // Não estava passando o requisito 8 mas com ajuda do meireles e petzinger
+    // conseguir descobrir, o teste não estava pegando do meu state local,
+    // e eu estava armazenando no local!
     // console.log(getStateExpenses);
     return (
       <div>
         <header>
           <span data-testid="email-field">{email}</span>
-          <span data-testid="total-field">{ new1 }</span>
+          <span data-testid="total-field">{ this.sumPrices().toFixed(2) }</span>
           <span data-testid="header-currency-field">BRL</span>
           <form>
             <label htmlFor="teste">
@@ -223,7 +224,7 @@ Wallet.propTypes = {
   handleSendForm: PropTypes.func.isRequired,
   coins: PropTypes.objectOf(PropTypes.any).isRequired,
   getStateExpenses: PropTypes.arrayOf(PropTypes.any).isRequired,
-  deleter: PropTypes.objectOf(PropTypes.any).isRequired,
+  deleter: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);
