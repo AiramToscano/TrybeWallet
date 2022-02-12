@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addDespesas, getCoinThunk } from '../actions/index';
+import { addDespesas, getCoinThunk, deleterDepesas } from '../actions/index';
 
 class Wallet extends React.Component {
   constructor() {
@@ -18,12 +18,23 @@ class Wallet extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.onSubmitDespesas = this.onSubmitDespesas.bind(this);
-    // this.sumPrices = this.sumPrices.bind(this);
+    this.sumPrices = this.sumPrices.bind(this);
+    this.onDeleter = this.onDeleter.bind(this);
   }
 
   componentDidMount() {
     const { getApiCoin } = this.props;
     getApiCoin();
+  }
+
+  onDeleter(id1) {
+    // const { totalPrice } = this.state;
+    const { deleter, getStateExpenses } = this.props;
+    // const {value} = this.state
+    // const newTotal = totalPrice - valorConvertido;
+    const net = getStateExpenses.filter(({ id }) => id !== id1);
+    deleter(net);
+    this.setState({}, () => this.sumPrices());
   }
 
   onSubmitDespesas() {
@@ -50,17 +61,14 @@ class Wallet extends React.Component {
 
   sumPrices() {
     const { getStateExpenses } = this.props;
-    let result;
-    console.log(getStateExpenses);
+    // console.log(getStateExpenses);
+    // console.log(e);
     const findNumber = getStateExpenses.map(({ currency, exchangeRates, value }) => {
-      result = value * exchangeRates[currency].ask;
-      return result;
+      return value * exchangeRates[currency].ask;
     });
     const total = findNumber
-      .reduce((totalVet, currentElement) => totalVet + currentElement);
+      .reduce((totalVet, currentElement) => totalVet + currentElement, 0);
     this.setState({ totalPrice: total });
-    // console.log(findNumber);
-    // console.log(total);
   }
 
   handleChange({ target }) {
@@ -73,15 +81,14 @@ class Wallet extends React.Component {
     const { email, coins, getStateExpenses } = this.props;
     const { totalPrice, currency,
       description, method, tag, value, moeda } = this.state;
+    const new1 = parseFloat(totalPrice).toFixed(2);
     // console.log(getStateExpenses);
     return (
       <div>
         <header>
           <span data-testid="email-field">{email}</span>
-          <div>
-            <span data-testid="total-field">{totalPrice}</span>
-            <span data-testid="header-currency-field">BRL</span>
-          </div>
+          <span data-testid="total-field">{ new1 }</span>
+          <span data-testid="header-currency-field">BRL</span>
           <form>
             <label htmlFor="teste">
               Valor:
@@ -89,7 +96,6 @@ class Wallet extends React.Component {
                 onChange={ this.handleChange }
                 type="number"
                 name="value"
-                min="0"
                 id="teste"
                 value={ value }
                 data-testid="value-input"
@@ -166,8 +172,10 @@ class Wallet extends React.Component {
               <th>Moeda de conversão</th>
               <th>Editar/Excluir</th>
             </tr>
-            {getStateExpenses.length > 0 ? getStateExpenses.map((e, index) => (
-              <tr key={ index }>
+          </thead>
+          {getStateExpenses.length > 0 ? getStateExpenses.map((e) => (
+            <tbody key={ e.id }>
+              <tr>
                 <td>{e.description}</td>
                 <td>{e.tag}</td>
                 <td>{e.method}</td>
@@ -180,9 +188,18 @@ class Wallet extends React.Component {
                   }
                 </td>
                 <td>{ moeda }</td>
+                <td>
+                  <button
+                    data-testid="delete-btn"
+                    type="button"
+                    onClick={ () => this.onDeleter(e.id) }
+                  >
+                    Excluir
+                  </button>
+                </td>
               </tr>
-            )) : null}
-          </thead>
+            </tbody>
+          )) : null}
         </table>
       </div>
     );
@@ -199,6 +216,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   handleSendForm: (obj) => dispatch(addDespesas(obj)),
   getApiCoin: () => dispatch(getCoinThunk()),
+  deleter: (obj) => dispatch(deleterDepesas(obj)),
 });
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,

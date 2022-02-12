@@ -1,15 +1,16 @@
 import coinAPI from '../services/coinApi';
 
 export const ADD_EMAIL_TYPE = 'ADD_EMAIL';
-export const GET_LOCATION = 'GET_LOCATION';
+// export const GET_LOCATION = 'GET_LOCATION';
 export const GET_LOCATION_SUCCESS = 'GET_LOCATION_SUCCESS';
 export const GET_LOCATION_FAIL = 'GET_LOCATION_FAIL';
 export const ADD_DESPESAS_TYPE = 'ADD_DESPESAS_TYPE';
+export const DELETER_DESPESAS_TYPE = 'DELETER_DESPESAS';
 
 // Action Creator
-export const getLocation = () => ({
-  type: GET_LOCATION,
-});
+// export const getLocation = () => ({
+//   type: GET_LOCATION,
+// });
 
 export const getCoinSuccess = (payload) => ({
   type: GET_LOCATION_SUCCESS,
@@ -40,4 +41,9 @@ export const addEmail = (payload) => ({
 export const addDespesas = (obj) => ({
   type: ADD_DESPESAS_TYPE,
   obj,
+});
+
+export const deleterDepesas = (value) => ({
+  type: DELETER_DESPESAS_TYPE,
+  value,
 });
