@@ -63,9 +63,8 @@ class Wallet extends React.Component {
     const { getStateExpenses } = this.props;
     // console.log(getStateExpenses);
     // console.log(e);
-    const findNumber = getStateExpenses.map(({ currency, exchangeRates, value }) => {
-      return value * exchangeRates[currency].ask;
-    });
+    const findNumber = getStateExpenses
+      .map(({ currency, exchangeRates, value }) => value * exchangeRates[currency].ask);
     const total = findNumber
       .reduce((totalVet, currentElement) => totalVet + currentElement, 0);
     this.setState({ totalPrice: total });
@@ -224,6 +223,7 @@ Wallet.propTypes = {
   handleSendForm: PropTypes.func.isRequired,
   coins: PropTypes.objectOf(PropTypes.any).isRequired,
   getStateExpenses: PropTypes.arrayOf(PropTypes.any).isRequired,
+  deleter: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);
