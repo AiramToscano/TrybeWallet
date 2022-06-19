@@ -3,7 +3,7 @@
 # Boas vindas ao repositório do projeto Trybe Wallet!
 
 
-# Habilidades:
+# Habilidades :
 
 
   * Criar um store Redux em aplicações React
