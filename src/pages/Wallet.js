@@ -14,11 +14,13 @@ class Wallet extends React.Component {
       value: '',
       id: 0,
       moeda: 'Real',
+      status: true,
     };
     this.handleChange = this.handleChange.bind(this);
     this.onSubmitDespesas = this.onSubmitDespesas.bind(this);
     this.sumPrices = this.sumPrices.bind(this);
     this.onDeleter = this.onDeleter.bind(this);
+    this.handleChangeButtom = this.handleChangeButtom.bind(this);
   }
 
   componentDidMount() {
@@ -31,7 +33,6 @@ class Wallet extends React.Component {
     const { currency, description, method, tag, value, id } = this.state;
     getApiCoin();
     const exchangeRates = coins;
-    // console.log(teste);
     this.setState({ id: id + 1 });
     const obj = {
       id,
@@ -44,30 +45,27 @@ class Wallet extends React.Component {
     };
 
     handleSendForm(obj);
-    // console.log(obj);
     this.setState({ value: '' }, () => this.sumPrices());
   }
 
   onDeleter(id1) {
-    // const { totalPrice } = this.state;
     const { deleter, getStateExpenses } = this.props;
-    // const {value} = this.state
-    // const newTotal = totalPrice - valorConvertido;
     const net = getStateExpenses.filter(({ id }) => id !== id1);
     deleter(net);
     this.setState({}, () => this.sumPrices());
   }
 
   handleChange({ target }) {
-    // console.log(target.value);
     const { name, value } = target;
     this.setState({ [name]: value });
   }
 
+  handleChangeButtom() {
+    this.setState({ status: false });
+  }
+
   sumPrices() {
     const { getStateExpenses } = this.props;
-    // console.log(getStateExpenses);
-    // console.log(e);
     const findNumber = getStateExpenses
       .map(({ currency, exchangeRates, value }) => value * exchangeRates[currency].ask);
     const total = findNumber
@@ -77,39 +75,52 @@ class Wallet extends React.Component {
 
   render() {
     const { email, coins, getStateExpenses } = this.props;
-    const { currency, description, method, tag, value, moeda } = this.state;
-    // const new1 = parseFloat(totalPrice).toFixed(2);
-    // Não estava passando o requisito 8 mas com ajuda do meireles e petzinger
-    // conseguir descobrir, o teste não estava pegando do meu state local,
-    // e eu estava armazenando no local!
-    // console.log(getStateExpenses);
+    const { currency, description, method, tag, value, moeda, status } = this.state;
     return (
       <div>
         <header>
-          <span data-testid="email-field">{email}</span>
-          <span data-testid="total-field">{ this.sumPrices().toFixed(2) }</span>
-          <span data-testid="header-currency-field">BRL</span>
-          <form>
-            <label htmlFor="teste">
+          <div className="flex justify-around text-white text-sm m-">
+            <span data-testid="email-field">{email}</span>
+            <span
+              data-testid="total-field"
+            >
+              { this.sumPrices().toFixed(2) }
+              BRL
+            </span>
+          </div>
+          <form className="bg-gray-900 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <label
+              htmlFor="teste"
+              className="inline text-white text-sm font-bold mb-2"
+            >
               Valor:
               <input
                 onChange={ this.handleChange }
                 type="number"
+                className="text-black m-2"
                 name="value"
                 id="teste"
                 value={ value }
                 data-testid="value-input"
               />
             </label>
-            Descrição:
-            <input
-              value={ description }
-              name="description"
-              data-testid="description-input"
-              onChange={ this.handleChange }
-            />
-            Metodo de Pagamento:
+            <label
+              htmlFor="teste2"
+              className="inline text-white text-sm font-bold mb-5"
+            >
+              Descrição:
+              <input
+                className="text-black m-2"
+                value={ description }
+                name="description"
+                data-testid="description-input"
+                onChange={ this.handleChange }
+                id="teste2"
+              />
+              Metodo de Pagamento:
+            </label>
             <select
+              className="text-black m-2"
               onChange={ this.handleChange }
               value={ method }
               name="method"
@@ -120,7 +131,9 @@ class Wallet extends React.Component {
               <option value="Cartão de crédito">Cartão de crédito</option>
               <option value="Cartão de débito">Cartão de débito</option>
             </select>
-            Tag:
+            <p className="inline text-white text-sm font-bold mb-5 m-3">
+              Tag:
+            </p>
             <select
               onChange={ this.handleChange }
               value={ tag }
@@ -134,61 +147,71 @@ class Wallet extends React.Component {
               <option value="Transporte">Transporte</option>
               <option value="Saúde">Saúde</option>
             </select>
-            <label htmlFor="currency">
-              moeda
-              <select
-                onChange={ this.handleChange }
-                value={ currency }
-                data-testid="currency-input"
-                name="currency"
-                id="currency"
-              >
-                {Object.values(coins).filter((e) => e.codein !== 'BRLT')
-                  .map((e, index) => (
-                    <option
-                      key={ index }
-                      data-testid={ e.code }
-                    >
-                      {e.code}
-                    </option>
-                  ))}
-              </select>
-            </label>
+            <p className="inline text-white text-sm font-bold mb-5 m-3">
+              Moeda:
+            </p>
+            <select
+              onChange={ this.handleChange }
+              onClick={ this.handleChangeButtom }
+              value={ currency }
+              data-testid="currency-input"
+              name="currency"
+              id="currency"
+            >
+              <option>Escolha</option>
+              {Object.values(coins).filter((e) => e.codein !== 'BRLT')
+                .map((e, index) => (
+                  <option
+                    key={ index }
+                    data-testid={ e.code }
+                  >
+                    {e.code}
+                  </option>
+                ))}
+            </select>
           </form>
-          <button type="button" onClick={ this.onSubmitDespesas }>
+          <button
+            className="
+            bg-purple-900
+           text-white font-bold py-2 px-4 rounded
+           focus:outline-none focus:shadow-outline"
+            type="button"
+            onClick={ this.onSubmitDespesas }
+            disabled={ status }
+          >
             Adicionar Despesas
           </button>
         </header>
-        <table>
+        <table className="table-auto">
           <thead>
             <tr>
-              <th>Descrição</th>
-              <th>Tag</th>
-              <th>Método de pagamento</th>
-              <th>Valor</th>
-              <th>Moeda</th>
-              <th>Câmbio utilizado</th>
-              <th>Valor convertido</th>
-              <th>Moeda de conversão</th>
-              <th>Editar/Excluir</th>
+              <th className="px-4 py-2 text-white">Descrição</th>
+              <th className="px-4 py-2 text-white">Tag</th>
+              <th className="px-4 py-2 text-white">Método de pagamento</th>
+              <th className="px-4 py-2 text-white">Valor</th>
+              <th className="px-4 py-2 text-white">Moeda</th>
+              <th className="px-4 py-2 text-white">Câmbio utilizado</th>
+              <th className="px-4 py-2 text-white">Valor convertido</th>
+              <th className="px-4 py-2 text-white">Moeda de conversão</th>
+              <th className="px-4 py-2 text-white">Editar/Excluir</th>
             </tr>
           </thead>
           {getStateExpenses.length > 0 ? getStateExpenses.map((e) => (
             <tbody key={ e.id }>
-              <tr>
-                <td>{e.description}</td>
-                <td>{e.tag}</td>
-                <td>{e.method}</td>
-                <td>{parseFloat(e.value).toFixed(2)}</td>
-                <td>{e.exchangeRates[e.currency].name}</td>
-                <td>{parseFloat(e.exchangeRates[e.currency].ask).toFixed(2)}</td>
-                <td>
+              <tr className="bg-white">
+                <td className="border px-4 py-2">{e.description}</td>
+                <td className="border px-4 py-2">{e.tag}</td>
+                <td className="border px-4 py-2">{e.method}</td>
+                <td className="border px-4 py-2">{parseFloat(e.value).toFixed(2)}</td>
+                <td className="border px-4 py-2">{e.exchangeRates[e.currency].name}</td>
+                <td className="border px-4 py-2">{parseFloat(e.exchangeRates[e.currency].ask).toFixed(2)}</td>
+                <td className="border px-4 py-2">
                   {
                     parseFloat(e.exchangeRates[e.currency].ask * e.value).toFixed(2)
                   }
                 </td>
-                <td>{ moeda }</td>
-                <td>
+                <td className="border px-4 py-2">{ moeda }</td>
+                <td className="border px-4 py-2">
                   <button
                     data-testid="delete-btn"
                     type="button"
@@ -205,14 +228,11 @@ class Wallet extends React.Component {
     );
   }
 }
-
 const mapStateToProps = (state) => ({
-  // console.log(state.wallet.currencies);
   email: state.user.email,
   coins: state.wallet.currencies,
   getStateExpenses: state.wallet.expenses,
 });
-
 const mapDispatchToProps = (dispatch) => ({
   handleSendForm: (obj) => dispatch(addDespesas(obj)),
   getApiCoin: () => dispatch(getCoinThunk()),
@@ -226,5 +246,4 @@ Wallet.propTypes = {
   getStateExpenses: PropTypes.arrayOf(PropTypes.any).isRequired,
   deleter: PropTypes.func.isRequired,
 };
-
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

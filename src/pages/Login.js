@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import '../index.css';
 import { addEmail } from '../actions/index';
 
 class Login extends React.Component {
@@ -46,29 +47,60 @@ class Login extends React.Component {
     const { email, password, disable } = this.state;
     //  console.log(disable);
     return (
-      <div>
-        <label htmlFor={ email }>
-          Email:
-          <input
-            name="email"
-            value={ email }
-            data-testid="email-input"
-            onChange={ this.handleChange }
-          />
-        </label>
-        <label htmlFor={ password }>
-          Senha:
-          <input
-            type="password"
-            name="password"
-            value={ password }
-            onChange={ this.handleChange }
-            data-testid="password-input"
-          />
-        </label>
-        <button disabled={ disable } type="button" onClick={ this.onSubmitEmail }>
-          Entrar
-        </button>
+      <div className=" flex flex-col justify-center items-center ">
+        <img
+          width="250"
+          className="mt-12"
+          height="40"
+          src="https://portaldobitcoin.com/wp-content/uploads/2018/03/wallet-1024x758.png"
+          alt="bit"
+        />
+        <div className="w-90 max-w-xs mt-19">
+          <form className="bg-gray-500 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <label
+              className="block text-gray-900 text-sm font-bold mb-2"
+              htmlFor={ email }
+            >
+              Email:
+              <input
+                className="shadow
+            appearance-none border rounded w-full py-2
+            px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                name="email"
+                value={ email }
+                data-testid="email-input"
+                onChange={ this.handleChange }
+              />
+            </label>
+            <label
+              className="block text-gray-900 text-sm font-bold mb-2"
+              htmlFor={ password }
+            >
+              Senha:
+              <input
+                className="shadow
+              appearance-none border rounded w-full py-2
+              px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="password"
+                name="password"
+                value={ password }
+                onChange={ this.handleChange }
+                data-testid="password-input"
+              />
+            </label>
+            <button
+              className="
+              bg-black hover:bg-purple-900
+               text-white font-bold py-2 px-4 rounded
+               focus:outline-none focus:shadow-outline"
+              disabled={ disable }
+              type="button"
+              onClick={ this.onSubmitEmail }
+            >
+              Entrar
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
