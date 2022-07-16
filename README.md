@@ -35,7 +35,7 @@ Neste projeto foi desenvolvido uma carteira de controle de gastos com conversor 
 
 
 ## Preview do projeto :
-[recipes](https://github.com/AiramToscano/TrybeWallet/blob/airam-toscano-trybe-wallet/walletgif.gif)
+![recipes](https://github.com/AiramToscano/TrybeWallet/blob/airam-toscano-trybe-wallet/walletgif.gif)
 
 
 
